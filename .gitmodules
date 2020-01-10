@@ -1,0 +1,3 @@
+[submodule "Capstone_FFT_prototype"]
+	path = Capstone_FFT_prototype
+	url = https://github.com/MrCanadianMenace/Capstone_FFT_prototype.git
