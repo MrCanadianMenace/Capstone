@@ -1,4 +1,4 @@
-module butterfly_sum_tb;
+module dft_block_tb;
 
 parameter word_size = 8;
 parameter half_word = word_size / 2;

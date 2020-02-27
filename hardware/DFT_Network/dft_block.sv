@@ -1,4 +1,4 @@
-module butterfly_sum #(parameter WORD_SZ = 8)
+module dft_block #(parameter WORD_SZ = 8)
     (
             i_CLK,
             i_RESET,
@@ -18,20 +18,5 @@ module butterfly_sum #(parameter WORD_SZ = 8)
 
     // Useful constant for splitting registers in half
     parameter midpoint = WORD_SZ/2;
-	 
-    twiddle_ram (
-        .address_a(),
-        .address_b(),
-        .clock(),
-        .data_a(),
-        .data_b(),
-        .rden_a(),
-        .rden_b(),
-        .wren_a(),
-        .wren_b(),
-        .q_a(),
-        .q_b()
-    );
-
     
 endmodule
