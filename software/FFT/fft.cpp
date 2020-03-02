@@ -6,6 +6,7 @@
 #include <string>
 
 #include "twiddle.h"
+#include "command_opts.h"
 
 void radix2_shuffle(dcomp** input_vector, const int sig_length, const int num_steps);
 void fft(dcomp** input_vector, const int sig_length, const int num_steps);
@@ -14,34 +15,31 @@ void print_vector(dcomp* test_list, int length);
 
 int main(int argc, char** argv) {
 
-    if (argc != 2) {
-        std::cout << "Error: Invalid command line arguments" << std::endl
-                  << "Usage: fft [size]" << std::endl;
-        return 1;
-    }
+    // Initial Declaration of command line arguments
+    int sig_length;
+    std::string in_file_name, out_file_name;
+
+    scan_commands(argc, argv, sig_length, in_file_name, out_file_name);
 
 	// The length of a signal determines how many 'steps' are
 	// necessary in the FFT implementation
-	const int sig_length = atoi(argv[1]);
 	const int num_steps = log2(sig_length);
 
 	dcomp* test_list = new dcomp[sig_length]; 
+    //std::ifstream inputFile;
     std::ofstream outputFile, inputFile;
-    std::string fileName;
 
     for (int i = 0; i < sig_length; i++) {
 			test_list[i] = sin(i);
     }
 
     // Open file to write FFT input to
-    fileName = "FFT_input";
-    inputFile.open(fileName, std::ios::out | std::ios::binary);
+    inputFile.open(in_file_name, std::ios::out | std::ios::binary);
     write_output(test_list, sig_length, inputFile);
     outputFile.close();
 
     // Open file to write FFT output to
-    fileName = "FFT_output";
-    outputFile.open(fileName, std::ios::out | std::ios::binary);
+    outputFile.open(out_file_name, std::ios::out | std::ios::binary);
 
     // Start Timer
     auto fft_start = std::chrono::high_resolution_clock::now();
