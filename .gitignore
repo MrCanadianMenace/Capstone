@@ -2,7 +2,8 @@
 *.bak
 
 # Ignore build outputs
-build/
+build
+obj_dir # Verilator output
 a.out
 *.out
 

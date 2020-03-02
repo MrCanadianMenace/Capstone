@@ -30,12 +30,12 @@ module butterfly_sum
 
     /** Complex Multiplication **/ 
     // For rising butterfly sum (A + B * W1_0)
-    wire twiddleA_real_complement = (~twiddleA_real) + 16'd1;
+    wire [WORD_MID-1:0] twiddleA_real_complement = (~twiddleA_real) + 16'd1;
     wire [WORD_MID-1:0] complex_mult_A_real = twiddleA_real * (in_B_real + in_B_imag) + twiddleA_imag * (in_B_real - in_B_imag);
     wire [WORD_MID-1:0] complex_mult_A_imag = twiddleA_real_complement * (in_B_real - in_B_imag) + twiddleA_imag * (in_B_real + in_B_imag);
 
     // For falling butterfly sum (A + B * W1_1)
-    wire twiddleB_real_complement = (~twiddleA_real) + 16'd1;
+    wire [WORD_MID-1:0] twiddleB_real_complement = (~twiddleA_real) + 16'd1;
     wire [WORD_MID-1:0] complex_mult_B_real = twiddleB_real * (in_B_real - in_B_imag) + twiddleB_imag * (in_B_real + in_B_imag);
     wire [WORD_MID-1:0] complex_mult_B_imag = twiddleB_real_complement * (in_B_real - in_B_imag) + twiddleB_imag * (in_B_real + in_B_imag);
 
@@ -47,7 +47,7 @@ module butterfly_sum
     assign out_D_imag = in_A_imag + complex_mult_B_imag;
 
     /** Finally Direct Back to the Output Ports **/
-    assign out_C = {out_C_real, out_C_imag};
-    assign out_D = {out_D_real, out_D_imag};
+    assign o_C = {out_C_real, out_C_imag};
+    assign o_D = {out_D_real, out_D_imag};
 
 endmodule
