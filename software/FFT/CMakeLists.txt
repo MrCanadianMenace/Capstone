@@ -1,6 +1,6 @@
 FIND_PACKAGE( Boost 1.69 REQUIRED COMPONENTS program_options )
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
-ADD_EXECUTABLE( fft fft.cpp command_opts.cpp )
+ADD_EXECUTABLE( fft fft.cpp command_opts.cpp fileio.cpp )
 
 TARGET_LINK_LIBRARIES( fft LINK_PUBLIC ${Boost_LIBRARIES} )

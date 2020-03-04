@@ -7,10 +7,10 @@
 
 #include "twiddle.h"
 #include "command_opts.h"
+#include "fileio.h"
 
 void radix2_shuffle(dcomp** input_vector, const int sig_length, const int num_steps);
 void fft(dcomp** input_vector, const int sig_length, const int num_steps);
-void write_output(dcomp* fft_output, const int sig_length, std::ofstream &outputFile);
 void print_vector(dcomp* test_list, int length);
 
 int main(int argc, char** argv) {
@@ -26,20 +26,9 @@ int main(int argc, char** argv) {
 	const int num_steps = log2(sig_length);
 
 	dcomp* test_list = new dcomp[sig_length]; 
-    //std::ifstream inputFile;
-    std::ofstream outputFile, inputFile;
 
-    for (int i = 0; i < sig_length; i++) {
-			test_list[i] = sin(i);
-    }
-
-    // Open file to write FFT input to
-    inputFile.open(in_file_name, std::ios::out | std::ios::binary);
-    write_output(test_list, sig_length, inputFile);
-    outputFile.close();
-
-    // Open file to write FFT output to
-    outputFile.open(out_file_name, std::ios::out | std::ios::binary);
+    // Read the input file into the signal array
+    read_signal_file(in_file_name, sig_length, test_list);
 
     // Start Timer
     auto fft_start = std::chrono::high_resolution_clock::now();
@@ -51,22 +40,15 @@ int main(int argc, char** argv) {
 
     // Finish Timer
     auto fft_stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(fft_stop - fft_start);
+    duration_us duration = std::chrono::duration_cast<std::chrono::microseconds>(fft_stop - fft_start);
         
-    // Write the calculated FFT output to a file
-    write_output(test_list, sig_length, outputFile);
-    outputFile.close();
+    write_fft_out_file(out_file_name, sig_length, test_list, duration);
 	
-    std::cout << "Signal Length: " << sig_length << "  Execution Time: " << duration.count() << " microseconds" << std::endl;
+    //std::cout << "Signal Length: " << sig_length << "  Execution Time: " << duration.count() << " microseconds" << std::endl;
 
 	delete [] test_list;
 
 	return 0;
-}
-
-dcomp twiddle(double power, double base) {
-
-	return exp(-2.0 * j * M_PI * power / base);
 }
 
 void radix2_shuffle(dcomp** input_vector, const int sig_length, const int num_steps) {
@@ -153,12 +135,6 @@ void fft(dcomp** input_vector, const int sig_length, const int num_steps) {
 	*input_vector = current_layer;
 
 	delete [] sum_vector;
-}
-
-void write_output(dcomp* fft_output, const int sig_length, std::ofstream &outputFile) {
-
-    for (int i = 0; i < sig_length; i++)
-        outputFile << fft_output[i] << std::endl;
 }
 
 void print_vector(dcomp* test_list, int length) {
