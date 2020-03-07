@@ -1,14 +1,17 @@
-.PHONY: default
 default:
 	@echo "Enter one of the following commands:"
-	@echo "clean"
-	@echo "sim"
+	@echo "	clean verilator"
 
 .PHONY: clean
 clean:
-	rm *.{vcd,out}
+	rm -f *.{vcd,out}
 	rm -rf obj_dir
+	rm -f Vbutterfly_sim
+	$(MAKE) -C Vsim clean
 
-sim:
-	verilator -Wall -cc butterfly_sum.v 
-	#g++ -I./obj_dir -I/usr/share/verilator/include VTest.cpp /usr/share/verilator/include/verilated.cpp *.h *.o -o Vcomplex_ad    d_sim
+.PHONY: verilator
+verilator:
+	verilator -Wall \
+			--Mdir Vsim/obj_dir \
+			-cc butterfly_sum.v 
+	$(MAKE) -C Vsim
