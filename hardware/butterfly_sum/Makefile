@@ -15,3 +15,8 @@ verilator:
 			--Mdir Vsim/obj_dir \
 			-cc butterfly_sum.v 
 	$(MAKE) -C Vsim
+
+icarus:
+	iverilog -o butterfly.out butterfly_sum.v butterfly_sum_tb.v
+	vvp butterfly.out
+	gtkwave butterfly_sum_tb.vcd
