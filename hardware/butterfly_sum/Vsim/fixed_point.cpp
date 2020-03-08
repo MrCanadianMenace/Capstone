@@ -14,7 +14,7 @@ fixpoint_16 int_to_fixed16(short signed int int_num) {
     return converted_integer + converted_fraction;
 }
 
-fixpoint_32 int_to_fixed32(long signed int) {
+fixpoint_32 int_to_fixed32(long signed int int_num) {
 
     fixpoint_32 converted_integer = fixpoint_32{int_num >> 12};
     fixpoint_32 converted_fraction = (fixpoint_32{int_num & 0xFFF}) >> 12;

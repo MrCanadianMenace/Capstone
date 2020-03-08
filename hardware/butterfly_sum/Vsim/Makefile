@@ -3,6 +3,7 @@ build:
 	g++ -Iobj_dir \
 		-I/usr/share/verilator/include \
 		/usr/share/verilator/include/verilated.cpp \
+		testbench.hpp \
 		fixed_point.cpp \
 		obj_dir/*.h \
 		obj_dir/*.o \

@@ -1,5 +1,8 @@
+/* verilator lint_off UNUSED */
 module butterfly_sum 
     (
+        i_CLK,
+        i_RST,
         i_A,
         i_B,
         i_twiddleA,
@@ -9,6 +12,7 @@ module butterfly_sum
     );
 
     // Port declarations
+    input wire i_CLK, i_RST;
     input wire  [31:0] i_A, i_B, i_twiddleA, i_twiddleB;
     output wire [31:0] o_A, o_B;
 
