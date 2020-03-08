@@ -14,15 +14,11 @@ reg [WORD_MID-1:0] in_B_imag;
 reg [WORD_MID-1:0] twiddleA_real;
 reg [WORD_MID-1:0] twiddleA_imag;
 
-reg [WORD_MID-1:0] twiddleB_real;
-reg [WORD_MID-1:0] twiddleB_imag;
-
 
 // Port signals
 wire [WORD_SZ-1:0] in_A = {in_A_real, in_A_imag}; 
 wire [WORD_SZ-1:0] in_B = {in_B_real, in_B_imag}; 
 wire [WORD_SZ-1:0] twiddleA = {twiddleA_real, twiddleA_imag};
-wire [WORD_SZ-1:0] twiddleB = {twiddleB_real, twiddleB_imag};
 wire [WORD_SZ-1:0] out_A, out_B;
 
 // Output real/imaginary complex split
@@ -36,7 +32,6 @@ butterfly_sum TEST_UNIT (
     .i_A(in_A),
     .i_B(in_B),
     .i_twiddleA(twiddleA),
-    .i_twiddleB(twiddleB),
     .o_A(out_A),
     .o_B(out_B)
 );
@@ -53,8 +48,6 @@ butterfly_sum TEST_UNIT (
 
         twiddleA_real = (16'd1 << 6);
         twiddleA_imag = (16'd0 << 6);
-        twiddleB_real = (16'hFFFF << 6);
-        twiddleB_imag = (16'd0 << 6);
 
         #1 $finish;
     end
