@@ -1,3 +1,5 @@
+.SILENT:
+
 default:
 	@echo "Enter one of the following commands:"
 	@echo "	clean verilator"
@@ -13,7 +15,8 @@ clean:
 verilator:
 	verilator -Wall \
 			--Mdir Vsim/obj_dir \
-			-cc butterfly_sum.v 
+			--trace \
+			-cc butterfly_sum.v
 	$(MAKE) -C Vsim
 
 icarus:
