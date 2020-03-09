@@ -37,6 +37,12 @@ module butterfly_sum
     complex_mult CPX_MULT0(i_B, i_twiddle, twiddle_rise_prod);
     complex_mult CPX_MULT1(i_B, n_twiddle, twiddle_fall_prod);
 
+    /** TODO: DEBUGGING SIGNALS **/
+    wire [WORD_MID-1:0] twiddle_rise_prod_real = twiddle_rise_prod[WORD_SZ-1:WORD_MID];
+    wire [WORD_MID-1:0] twiddle_rise_prod_imag = twiddle_rise_prod[WORD_MID-1:0];
+    wire [WORD_MID-1:0] twiddle_fall_prod_real = twiddle_fall_prod[WORD_SZ-1:WORD_MID];
+    wire [WORD_MID-1:0] twiddle_fall_prod_imag = twiddle_rise_prod[WORD_MID-1:0];
+
     /** Complex Addition for final step **/
     assign o_A = i_A + twiddle_rise_prod;
     assign o_B = i_A + twiddle_fall_prod;

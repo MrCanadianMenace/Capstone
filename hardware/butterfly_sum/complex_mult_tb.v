@@ -43,6 +43,13 @@ wire [WORD_MID-1:0] test_C_imag = test_C[WORD_MID-1:0];
         test_B_real = 16'h0110;
         test_B_imag = 16'hFF60;
 
+        
+        #1  // Increment CLK by 1
+        test_A_real = 16'hFFB0;
+        test_A_imag = 16'h00A0;
+        test_B_real = 16'h00DF;
+        test_B_imag = 16'hFEF0;
+
         #1 $finish;
     end
 endmodule

@@ -56,6 +56,20 @@ butterfly_sum TEST_UNIT (
         in_B_real = 16'h00E0;
         in_B_imag = 16'h0110;
 
+        // TODO: Convert desired values to binary form
+        #1  // Increment CLK by 1
+        in_A_real = 16'hFFB0;
+        in_A_imag = 16'h00A0;
+        in_B_real = 16'h00DF;
+        in_B_imag = 16'hFEF0;
+
+        
+        #1  // Increment CLK by 1
+        in_A_real = 16'hFFB0;
+        in_A_imag = 16'h00A0;
+        in_B_real = 16'h00DF;
+        in_B_imag = 16'hFEF0;
+
         #1 $finish;
     end
 endmodule

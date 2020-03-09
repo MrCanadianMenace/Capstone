@@ -16,7 +16,7 @@ module sign_mult(A, B, C);
     wire [WORD_MID-2:0] operand_B = (B_sign==1'b0) ? B[WORD_MID-2:0] : ~B[WORD_MID-2:0] + 1;
 
     wire [WORD_SZ-2:0] unsigned_mult = operand_A * operand_B;
-    assign C[WORD_MID-1] = C_sign;
+    assign C[WORD_MID-1] = (unsigned_mult==0) ? 1'b0 : C_sign;
     assign C[WORD_MID-2:0] = (C_sign==1'b0) ? unsigned_mult[20:6] : ~unsigned_mult[20:6] + 1;
 
 endmodule
