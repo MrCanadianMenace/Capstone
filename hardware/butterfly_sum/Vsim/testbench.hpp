@@ -41,7 +41,7 @@ template<class MODULE> class TESTBENCH {
         // Increment clock signal to module core
         virtual void tick(void) {
             // Increment our own internal time reference
-            m_tickcount++;
+            m_tickcount += 4;
 
             /* Make sure any combinational logic depending upon
             * inputs that may have changed before we called tick()
@@ -52,21 +52,21 @@ template<class MODULE> class TESTBENCH {
 
             // Dump to m_trace file
             if (m_trace) 
-                m_trace->dump(10 * m_tickcount - 2);
+                m_trace->dump(m_tickcount);
 
             // Rising edge
             m_core->i_CLK = 1;
             m_core->eval();
             // Dump to m_trace file
             if (m_trace) 
-                m_trace->dump(10 * m_tickcount);
+                m_trace->dump(m_tickcount+1);
 
             // Falling edge
             m_core->i_CLK = 0;
             m_core->eval();
             // Dump to m_trace file
             if (m_trace) {
-                m_trace->dump(10 * m_tickcount + 5);
+                m_trace->dump(m_tickcount+2);
 
                 /* Need to flush any I/O to the m_trace file so that
                  * we may use the assert() function between now and
@@ -75,7 +75,7 @@ template<class MODULE> class TESTBENCH {
                 m_trace->flush();
             // Dump to trace file
             if (m_trace) 
-                m_trace->dump(10 * m_tickcount);
+                m_trace->dump(m_tickcount+3);
             }
         }
 

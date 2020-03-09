@@ -20,6 +20,16 @@ verilator:
 	$(MAKE) -C Vsim
 
 icarus:
-	iverilog -o butterfly.out butterfly_sum.v butterfly_sum_tb.v
+	iverilog -o butterfly.out sign_mult.v complex_mult.v butterfly_sum.v butterfly_sum_tb.v
 	vvp butterfly.out
 	gtkwave butterfly_sum_tb.vcd
+
+sign_multiply_wave:
+	iverilog -o sign_mult.out sign_mult.v sign_mult_tb.v
+	vvp sign_mult.out
+	gtkwave sign_multiply_tb.vcd
+
+complex_multiply_wave:
+	iverilog -o complex_mult.out sign_mult.v complex_mult.v complex_mult_tb.v
+	vvp complex_mult.out
+	gtkwave complex_mult_tb.vcd

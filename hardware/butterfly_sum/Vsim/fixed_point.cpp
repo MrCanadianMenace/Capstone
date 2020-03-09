@@ -36,14 +36,7 @@ long signed int Complex::to_input() {
 void Complex::from_output(long signed int out) {
 
     // Reassemble Real part
-    real = out >> 16; 
-    fixpoint_16 real_int = fixpoint_16{real >> 6};
-    fixpoint_16 real_frac = (fixpoint_16{real & 0x3F}) >> 6;    
-    real = real_int + real_frac;
-
-    imag = out & 0xFFFF; 
-    fixpoint_16 imag_int = fixpoint_16{imag >> 6};
-    fixpoint_16 imag_frac = (fixpoint_16{imag & 0x3F}) >> 6;    
-    imag = imag_int + imag_frac;
+    real = int_to_fixed16(out >> 16);
+    imag = int_to_fixed16(out & 0xFFFF); 
 }
 
