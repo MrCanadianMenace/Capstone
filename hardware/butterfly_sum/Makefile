@@ -16,7 +16,7 @@ verilator:
 	verilator -Wall \
 			--Mdir Vsim/obj_dir \
 			--trace \
-			-cc butterfly_sum.v
+			-cc butterfly_sum_helper.v
 	$(MAKE) -C Vsim
 
 icarus:

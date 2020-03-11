@@ -1,6 +1,6 @@
 .SILENT:
 build:
-	$(MAKE) -C obj_dir -f Vbutterfly_sum.mk
+	$(MAKE) -C obj_dir -f Vbutterfly_sum_helper.mk
 	g++ -Iobj_dir \
 		-I/usr/share/verilator/include \
 		/usr/share/verilator/include/verilated.cpp \
