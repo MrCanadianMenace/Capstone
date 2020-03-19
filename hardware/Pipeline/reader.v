@@ -10,7 +10,7 @@ module reader
     output reg [WORD_SIZE-1:0] o_pipedata_B
 );
 
-always @ (i_CLK) begin
+always @ (posedge i_CLK) begin
 
     o_pipedata_A <= i_rddata_A; 
     o_pipedata_B <= i_rddata_B;
