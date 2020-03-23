@@ -1,0 +1,6 @@
+[submodule "AlgorithmPrototypes/Capstone_cmoran26"]
+	path = AlgorithmPrototypes/Capstone_cmoran26
+	url = https://github.com/cmoran26/Capstone_cmoran26.git
+[submodule "AlgorithmPrototypes/Capstone_FFT_prototype"]
+	path = AlgorithmPrototypes/Capstone_FFT_prototype
+	url = git@github.com:MrCanadianMenace/Capstone_FFT_prototype.git
