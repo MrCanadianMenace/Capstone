@@ -1,14 +1,22 @@
-module read_driver(
+module read_driver
+#(parameter ADDR_SIZE = 5,
+  parameter MAX_STATE = 3 )
+(
     input wire i_CLK, 
     input wire i_RST,
-    output reg [4:0] o_rdaddr_A,
-    output reg [4:0] o_rdaddr_B,
+
+    output reg o_rden,
+    output reg o_wren,
+    output reg [ADDR_SIZE-1:0] o_rdaddr_A,
+    output reg [ADDR_SIZE-1:0] o_rdaddr_B,
     //TODO: Debug signals
     output wire [3:0] o_state_HEX0
 );
+    // Useful Parameter
+    parameter STATE_SIZE = $clog2(MAX_STATE+2);
 
 	/** Internal Signals **/
-	reg [3:0] STATE = 4'b0000;
+	reg [STATE_SIZE-1:0] STATE = 4'b0000;
 
     assign o_state_HEX0 = STATE;
 
@@ -16,36 +24,49 @@ module read_driver(
 
 		if (i_RST == 1'b1) begin
 			STATE		<= 4'b0000;
-			o_rdaddr_A 	<= 5'b00000;
+			o_rdaddr_A 	<= 'h0;
 			o_rdaddr_B 	<= 5'b00000;
+            o_rden      <= 1'b0;
+            o_wren      <= 1'b0;
 		end
 
 		else begin
             // Walk through several memory addresses to read from
 			case (STATE)
-				4'h0: begin
+				'h0: begin
+                    o_rden      <= 'b1;
 					o_rdaddr_A  <= 5'b00000;
 					o_rdaddr_B  <= 5'b00001;
 
-					STATE <= STATE + 1;
+					STATE       <= STATE + 1;
 				end
 
-				4'h1: begin
-					o_rdaddr_A  <= 5'h2;
-					o_rdaddr_B  <= 5'h3;
+                'h2: begin
+                    o_wren      <= 'h1;
 
-					STATE		<= STATE + 1;
-				end
+                    o_rdaddr_A  <= o_rdaddr_A + 2;
+                    o_rdaddr_B  <= o_rdaddr_B + 2;
+                    STATE	    <= STATE + 1;
+                end
+                
+                MAX_STATE: begin
+                    o_rden  <= 'b0;
+                    STATE   <= STATE + 1; 
+                end
 
-				4'h2: begin
-					o_rdaddr_A  <= 5'h4;
-					o_rdaddr_B  <= 5'h5;
+                MAX_STATE + 2: begin
+                    o_wren  <= 'b0;
+                    STATE   <= 'h0;
+                end
+                    
+                default: begin 
+                    o_rdaddr_A  <= o_rdaddr_A + 2;
+                    o_rdaddr_B  <= o_rdaddr_B + 2;
+                    STATE       <= STATE + 1;
+                end
 
-					STATE		<= STATE + 1;
-				end
-
-				default: STATE	<= 5'b00000;
 			endcase
 		end // end if
 	end // end always
+
 endmodule

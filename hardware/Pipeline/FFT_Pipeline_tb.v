@@ -2,7 +2,7 @@ module FFT_Pipeline_tb;
 
 // Testbench driving signals
 wire [3:0] FAKE_KEY;
-wire [7:0] FAKE_SW;
+wire [17:0] FAKE_SW;
 reg CLK = 0, RST = 1, MEMSW = 0, PIPESW = 0;
 
 assign FAKE_KEY[3] = RST;
@@ -33,6 +33,6 @@ FFT_Pipeline TEST_MOD(
 
         #1 RST <= 1'b1;
 
-        #50 $finish;
+        #150 $finish;
     end
 endmodule

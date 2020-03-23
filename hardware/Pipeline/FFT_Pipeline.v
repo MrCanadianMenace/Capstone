@@ -70,22 +70,33 @@ module FFT_Pipeline(
 	output		          		FL_WP_N
 );
 
+//=======================================================
+//  Parameter declarations
+//=======================================================
+parameter WORD_SIZE = 74;
+parameter MEM_SIZE = 4;
 
+parameter HALFWORD_SIZE = WORD_SIZE / 2;
+parameter ADDR_SIZE = $clog2(MEM_SIZE);
 
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
 wire CLK = CLOCK_50;
 wire STEP = ~KEY[2];
-wire MEM_CLK = ~STEP;
+wire MEM_CLK = ~CLK; //~STEP;
 wire RST = ~KEY[3];
 wire MEMSW = SW[0];
 wire PIPESW = SW[1];
 
-wire [15:0] w_readdata_A, w_readdata_B;
-wire [15:0] w_piperead_A, w_piperead_B;
-wire [4:0] w_readaddr_A, w_readaddr_B;
+wire [WORD_SIZE-1:0] w_readdata_A, w_readdata_B;
+wire [WORD_SIZE-1:0] w_writedata_A, w_writedata_B;
+wire [WORD_SIZE-1:0] w_piperead_A, w_piperead_B;
+wire [ADDR_SIZE-1:0] w_readaddr_A, w_readaddr_B;
+wire [ADDR_SIZE-1:0] w_writeaddr_A, w_writeaddr_B;
+wire [ADDR_SIZE-1:0] w_pipeaddr_A, w_pipeaddr_B;
 wire [3:0] w_driver_state;
+wire w_read_en, w_write_en;
 
 //=======================================================
 //  Structural coding
@@ -93,39 +104,52 @@ wire [3:0] w_driver_state;
 
 /** Debug LEDs **/
 assign LEDG[6] = RST;
-assign LEDG[4] = STEP;
+assign LEDG[4] = CLK;
 
 assign LEDR[0] = MEMSW;
 assign LEDR[1] = PIPESW;
 
-    reader OP_READER (
-        .i_CLK(STEP),
-        .i_RST(RST),
+
+    fft_pipe 
+	#(.WORD_SIZE(WORD_SIZE),
+      .ADDR_SIZE(ADDR_SIZE))
+    pipeline
+    (
+        .i_CLK(CLK),
         .i_rddata_A(w_readdata_A),
         .i_rddata_B(w_readdata_B),
+        .i_rdaddr_A(w_readaddr_A),
+        .i_rdaddr_B(w_readaddr_B),
 
-        .o_pipedata_A(w_piperead_A),
-        .o_pipedata_B(w_piperead_B)
+        .o_wrdata_A(w_writedata_A),
+        .o_wrdata_B(w_writedata_B),
+        .o_wraddr_A(w_writeaddr_A),
+        .o_wraddr_B(w_writeaddr_B)
     );
 
-    RAM2B RAM(
+    RAM2B 
+    #(.WORD_SIZE(WORD_SIZE),
+      .MEM_SIZE(MEM_SIZE),
+      .ADDR_SIZE(ADDR_SIZE))
+    RAM(
         .i_CLK(MEM_CLK),
         .i_RST(RST),
-        //.i_write_en_A,
-        //.i_write_en_B,
-        .i_read_en_A(1'b1),
-        .i_read_en_B(1'b1),
-        //.i_write_addr_A,
-        //.i_write_addr_B,
+        .i_write_en_A(w_write_en),
+        .i_write_en_B(w_write_en),
+        .i_read_en_A(w_read_en),
+        .i_read_en_B(w_read_en),
+        .i_write_addr_A(w_writeaddr_A),
+        .i_write_addr_B(w_writeaddr_B),
         .i_read_addr_A(w_readaddr_A),
         .i_read_addr_B(w_readaddr_B),
-        //.i_write_data_A,
-        //.i_write_data_B,
+        .i_write_data_A(w_writedata_A),
+        .i_write_data_B(w_writedata_B),
 
         .o_read_data_A(w_readdata_A),
         .o_read_data_B(w_readdata_B)
     );
 
+    /*
     ReadDebugger DEBUGGER(
         .i_memval(MEMSW),
         .i_pipeval(PIPESW),
@@ -143,11 +167,17 @@ assign LEDR[1] = PIPESW;
         .o_HEX4(HEX4),
         .o_HEX0(HEX0)
     );
+    */
 
-    read_driver DRIVER(
-        .i_CLK(STEP), 
+    read_driver 
+    #(.ADDR_SIZE(ADDR_SIZE),
+      .MAX_STATE(4))
+    DRIVER(
+        .i_CLK(CLK), 
         .i_RST(RST),
 
+        .o_rden(w_read_en),
+        .o_wren(w_write_en),
         .o_rdaddr_A(w_readaddr_A),
         .o_rdaddr_B(w_readaddr_B),
         //TODO: Debug signal
