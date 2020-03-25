@@ -38,7 +38,7 @@ module butterfly_sum_helper
     );
 
     // Recombine outputs
-    assign {o_A_real[HALF_SIZE-1:0], o_A_imag[HALF_SIZE-1:0]} = w_o_A;;
+    assign {o_A_real[HALF_SIZE-1:0], o_A_imag[HALF_SIZE-1:0]} = w_o_A;
     assign {o_B_real[HALF_SIZE-1:0], o_B_imag[HALF_SIZE-1:0]} = w_o_B;
     assign {o_A_real_sign, o_A_imag_sign} = {w_o_A[WORD_SIZE-1], w_o_A[HALF_SIZE-1]}; 
     assign {o_B_real_sign, o_B_imag_sign} = {w_o_B[WORD_SIZE-1], w_o_B[HALF_SIZE-1]}; 
