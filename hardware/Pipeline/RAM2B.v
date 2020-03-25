@@ -24,7 +24,7 @@ module RAM2B
 
     initial begin
         $display("Loading memory");
-        $readmemh("mem_inst.mem", RAM);
+        $readmemh("pipe_memory.mem", RAM);
     end
 
     /** Asynchronous Reading **/

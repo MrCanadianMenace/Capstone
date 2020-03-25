@@ -76,7 +76,7 @@ module FFT_Pipeline(
 parameter WORD_SIZE = 74;
 parameter MEM_SIZE = 4;
 
-parameter HALFWORD_SIZE = WORD_SIZE / 2;
+parameter HALF_SIZE = WORD_SIZE / 2;
 parameter ADDR_SIZE = $clog2(MEM_SIZE);
 
 //=======================================================
@@ -97,6 +97,19 @@ wire [ADDR_SIZE-1:0] w_writeaddr_A, w_writeaddr_B;
 wire [ADDR_SIZE-1:0] w_pipeaddr_A, w_pipeaddr_B;
 wire [3:0] w_driver_state;
 wire w_read_en, w_write_en;
+
+/** TODO: DEBUG WIRES **/
+wire [HALF_SIZE-1:0] w_rddataA_real = w_readdata_A[WORD_SIZE-1:HALF_SIZE];
+wire [HALF_SIZE-1:0] w_rddataA_imag = w_readdata_A[HALF_SIZE-1:0];
+
+wire [HALF_SIZE-1:0] w_rddataB_real = w_readdata_B[WORD_SIZE-1:HALF_SIZE];
+wire [HALF_SIZE-1:0] w_rddataB_imag = w_readdata_B[HALF_SIZE-1:0];
+
+wire [HALF_SIZE-1:0] w_wrdataA_real = w_writedata_A[WORD_SIZE-1:HALF_SIZE];
+wire [HALF_SIZE-1:0] w_wrdataA_imag = w_writedata_A[HALF_SIZE-1:0];
+
+wire [HALF_SIZE-1:0] w_wrdataB_real = w_writedata_B[WORD_SIZE-1:HALF_SIZE];
+wire [HALF_SIZE-1:0] w_wrdataB_imag = w_writedata_B[HALF_SIZE-1:0];
 
 //=======================================================
 //  Structural coding
