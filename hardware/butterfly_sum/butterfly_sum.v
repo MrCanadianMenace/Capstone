@@ -3,13 +3,14 @@ module butterfly_sum
 	#(parameter WORD_SIZE = 74,
 	  parameter HALF_SIZE = 37)
     (
-        input wire i_CLK,
-        input wire i_RST,
-        input wire  [WORD_SIZE-1:0] i_A,
-        input wire  [WORD_SIZE-1:0] i_B,
-        input wire  [WORD_SIZE-1:0] i_twiddle,
-        output wire [WORD_SIZE-1:0] o_A,
-        output wire [WORD_SIZE-1:0] o_B
+        input i_CLK,
+        input i_RST,
+        input [WORD_SIZE-1:0] i_A,
+        input [WORD_SIZE-1:0] i_B,
+        input [WORD_SIZE-1:0] i_twiddle,
+
+        output reg  [WORD_SIZE-1:0] o_A,
+        output reg  [WORD_SIZE-1:0] o_B
     );
 
     // Wires for simplifying splitting complex values into real and imaginary parts
@@ -35,8 +36,10 @@ module butterfly_sum
     wire [HALF_SIZE-1:0] twiddle_fall_prod_real = twiddle_fall_prod[WORD_SIZE-1:HALF_SIZE];
     wire [HALF_SIZE-1:0] twiddle_fall_prod_imag = twiddle_rise_prod[HALF_SIZE-1:0];
 
-    /** Complex Addition for final step **/
-    assign o_A = i_A + twiddle_rise_prod;
-    assign o_B = i_A + twiddle_fall_prod;
+    always @ (posedge i_CLK) begin
+        /** Complex Addition for final step **/
+        o_A <= i_A + twiddle_rise_prod;
+        o_B <= i_A + twiddle_fall_prod;
+    end
 
 endmodule
