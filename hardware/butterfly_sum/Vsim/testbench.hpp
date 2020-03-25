@@ -1,4 +1,4 @@
-#include "Vbutterfly_sum.h"
+#include "Vbutterfly_sum_helper.h"
 #include <verilated_vcd_c.h>
 
 template<class MODULE> class TESTBENCH {

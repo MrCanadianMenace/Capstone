@@ -1,9 +1,12 @@
 # Ignore backup files
 *.bak
 
+# Verilog simulator files
+*.vcd
+obj_dir # Verilator output
+
 # Ignore build outputs
 build
-obj_dir # Verilator output
 a.out
 *.out
 
@@ -16,7 +19,7 @@ db
 greybox_tmp
 incremental_db
 simulation
-testbench
+#testbench
 timing
 
 # ignore Quartus II generated files
