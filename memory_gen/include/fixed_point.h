@@ -3,6 +3,8 @@
 
 // Create a fixed point type which has 18 integer bits and 18 fractional bits
 typedef cnl::fixed_point<cnl::int64, -18> fixpoint_37;
+        
+void fixed_to_hex(char (&hex_string)[11], long long int fixed_int);
 
 class Fixed_Complex {
     public:
@@ -11,16 +13,12 @@ class Fixed_Complex {
         fixpoint_37 imag;
 
         char real_hex[10];
-        char imag_hex[9];
+        char imag_hex[10];
 
         // Methods
         Fixed_Complex();
-        Fixed_Complex(fixpoint_37, fixpoint_37);
+        Fixed_Complex(double, double);
 
         long long int real_input();
         long long int imag_input();
-
-    private:
-        void fixed_real_to_hex();
-        void fixed_imag_to_hex();
 };

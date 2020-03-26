@@ -1,6 +1,6 @@
 #include "command_opts.h"
 
-void scan_commands(int argc, char** argv, int &twiddle_size, std::string &output_file, bool &dryrun) {
+void scan_commands(int argc, char** argv, int &twiddle_table_depth, std::string &output_file, bool &dryrun) {
 
     try {
         // Define the program options and attempt to parse the command line flags
@@ -39,7 +39,7 @@ void scan_commands(int argc, char** argv, int &twiddle_size, std::string &output
 
         // Finally, retrieve the command line options
         output_file = vm["ofile"].as<std::string>();
-        twiddle_size = vm["size"].as<int>() / 2;
+        twiddle_table_depth = vm["size"].as<int>();
     }
     catch(std::exception& e) {
         std::cerr << "Unhandled Exception: "
