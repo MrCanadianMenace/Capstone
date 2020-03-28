@@ -1,8 +1,17 @@
-default:
-	g++ -L/usr/lib64 -lboost_program_options -o fft.out fft.cpp command_opts.cpp fileio.cpp
+HEADERS := include
+BIN := bin
+
+SRC := $(wildcard src/*.cpp)
+
+.SILENT:
+$(BIN):
+	mkdir -p $(BIN)
+	g++ -L/usr/lib64 \
+		-lboost_program_options  \
+		-I$(HEADERS) \
+		$(SRC) \
+		-o $(BIN)/capfft
 
 .PHONY: clean
 clean:
-	rm -f *.out
-	rm -f FFT*
-	rm -rf build
+	rm -rf $(BIN)
