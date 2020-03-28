@@ -5,10 +5,7 @@ TESTBENCH_DIR := $(PWD)/testbench
 MOD_LIB := $(wildcard $(BUTTERFLY_SUM_MOD_DIR)/*.v)
 SRC := $(wildcard $(PWD)/*.v)
 
-default:
-	echo $(BUTTERFLY_SUM_MOD_DIR)
-	echo $(MOD_LIB)
-
+.SILENT:
 icarus:
 	iverilog -g2001 -o Pipe.out \
 			$(TESTBENCH_DIR)/FFT_Pipeline_tb.v \

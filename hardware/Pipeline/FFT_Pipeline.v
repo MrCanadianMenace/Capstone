@@ -78,6 +78,7 @@ parameter MEM_SIZE = 4;
 
 parameter HALF_SIZE = WORD_SIZE / 2;
 parameter ADDR_SIZE = $clog2(MEM_SIZE);
+parameter TWID_ADDR_SIZE = $clog2(127);
 
 //=======================================================
 //  REG/WIRE declarations
@@ -89,9 +90,11 @@ wire RST = ~KEY[3];
 wire MEMSW = SW[0];
 wire PIPESW = SW[1];
 
-wire [WORD_SIZE-1:0] w_readdata_A, w_readdata_B;
+wire [WORD_SIZE-1:0] w_readdata_A, w_readdata_B, w_readdata_twiddle;
 wire [WORD_SIZE-1:0] w_writedata_A, w_writedata_B;
 wire [WORD_SIZE-1:0] w_piperead_A, w_piperead_B;
+
+wire [TWID_ADDR_SIZE-1:0] w_readaddr_twiddle;
 wire [ADDR_SIZE-1:0] w_readaddr_A, w_readaddr_B;
 wire [ADDR_SIZE-1:0] w_writeaddr_A, w_writeaddr_B;
 wire [ADDR_SIZE-1:0] w_pipeaddr_A, w_pipeaddr_B;
@@ -131,6 +134,7 @@ assign LEDR[1] = PIPESW;
         .i_CLK(CLK),
         .i_rddata_A(w_readdata_A),
         .i_rddata_B(w_readdata_B),
+        .i_rddata_twiddle(w_readdata_twiddle),
         .i_rdaddr_A(w_readaddr_A),
         .i_rdaddr_B(w_readaddr_B),
 
@@ -161,6 +165,16 @@ assign LEDR[1] = PIPESW;
         .o_read_data_A(w_readdata_A),
         .o_read_data_B(w_readdata_B)
     );
+    
+    Twiddle_ROM 
+    #( .WORD_SIZE(74),
+       .MEM_SIZE(127) )
+    ROM (
+        .i_read_en(1'b1),
+        .i_read_addr(w_readaddr_twiddle),
+
+        .o_read_data(w_readdata_twiddle)
+    );
 
     /*
     ReadDebugger DEBUGGER(
@@ -184,7 +198,7 @@ assign LEDR[1] = PIPESW;
 
     read_driver 
     #(.ADDR_SIZE(ADDR_SIZE),
-      .MAX_STATE(4))
+      .MAX_STATE(2))
     DRIVER(
         .i_CLK(CLK), 
         .i_RST(RST),
@@ -193,6 +207,7 @@ assign LEDR[1] = PIPESW;
         .o_wren(w_write_en),
         .o_rdaddr_A(w_readaddr_A),
         .o_rdaddr_B(w_readaddr_B),
+        .o_rdaddr_tw(w_readaddr_twiddle),
         //TODO: Debug signal
         .o_state_HEX0(w_driver_state)
     );

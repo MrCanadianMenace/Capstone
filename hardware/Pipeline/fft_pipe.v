@@ -5,6 +5,7 @@ module fft_pipe
     input i_CLK,
     input [WORD_SIZE-1:0] i_rddata_A,
     input [WORD_SIZE-1:0] i_rddata_B,
+    input [WORD_SIZE-1:0] i_rddata_twiddle,
     input [ADDR_SIZE-1:0] i_rdaddr_A,
     input [ADDR_SIZE-1:0] i_rdaddr_B,
 
@@ -18,17 +19,19 @@ module fft_pipe
 // Calculation pipe process
 reg [WORD_SIZE-1:0] r_pipedata_in_A, r_pipedata_in_B;
 reg [WORD_SIZE-1:0] r_pipedata_out_A, r_pipedata_out_B;
+reg [WORD_SIZE-1:0] r_pipe_in_twiddle;
+
 reg [ADDR_SIZE-1:0] r_pipeaddr_in_A, r_pipeaddr_in_B;
 reg [ADDR_SIZE-1:0] r_pipeaddr_out_A, r_pipeaddr_out_B;
-reg [WORD_SIZE-1:0] r_dummy_twiddle = 'h1 << (37 + 18);
 
 /** First Pipe Phase - Reading **/
 always @ (posedge i_CLK) begin
     r_pipeaddr_in_A <= i_rdaddr_A;
     r_pipeaddr_in_B <= i_rdaddr_B;
 
-    r_pipedata_in_A <= i_rddata_A;
-    r_pipedata_in_B <= i_rddata_B;
+    r_pipedata_in_A     <= i_rddata_A;
+    r_pipedata_in_B     <= i_rddata_B;
+    r_pipe_in_twiddle   <= i_rddata_twiddle;
 end
 
 /** Second Pipe Phase - Calculation **/
@@ -38,7 +41,7 @@ arithmetic_unit (
     .i_CLK(i_CLK),
     .i_A(r_pipedata_in_A),
     .i_B(r_pipedata_in_B),
-    .i_twiddle(r_dummy_twiddle),
+    .i_twiddle(r_pipe_in_twiddle),
     .o_A(o_wrdata_A),
 	.o_B(o_wrdata_B)
 );
