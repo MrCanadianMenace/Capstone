@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cnl/fixed_point.h>
 
 // Create a fixed point type which has 18 integer bits and 18 fractional bits

@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "fileio.h"
 
 void write_file(std::string file_name, Fixed_Complex *twiddle_list, const int twiddle_table_depth, bool dryrun) {
@@ -29,20 +31,16 @@ void twiddle_hex_string(char (&hex_string)[20], Fixed_Complex twiddle) {
 
     char imag_hex[11] = {0}, real_hex[11] = {0};
     fixed_to_hex(imag_hex, twiddle.imag_input());
-    //std::cout << "ImagOutput: " << imag_hex << " FinalChar: " << imag_hex[0] << std::endl;
 
     // Shift the real value over 1 bit to shift in imaginary Most Significant Bit
-    //std::cout << std::endl << "Real PreShift: " << twiddle.real_input();
     long long int real_fixed_int = twiddle.real_input() << 1; 
-    //printf("\tPostShift: %x", real_fixed_int);
+    // Perform conversion from Ascii to int on Most Significant byte of imag_hex 
+    // then logic OR it into real_fixed_int
     real_fixed_int |= (int) imag_hex[0] - 48;
-    //printf("\tPostOR: %x\tMSB of Imaginary: %d\n", real_fixed_int, (int) imag_hex[0] - 48);
 
     fixed_to_hex(real_hex, real_fixed_int);
     if (real_fixed_int < 0)
         real_hex[0] |= 3;
-
-    //std::cout << "RealOutput: " << real_hex << std::endl;
 
     // Fill in upper ten hex values with real hex values
     for (int i = 0; i < 10; i++)
@@ -51,5 +49,4 @@ void twiddle_hex_string(char (&hex_string)[20], Fixed_Complex twiddle) {
     // Fill in lower nine hex values with imaginary hex values
     for (int i = 1; i < 10; i++) 
         hex_string[i+9] = imag_hex[i];
-
 }

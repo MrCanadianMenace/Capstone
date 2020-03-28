@@ -27,6 +27,7 @@ long long int Fixed_Complex::imag_input() {
 
 void fixed_to_hex(char (&hex_string)[11], long long int fixed_int) {
 
+    // Check to see if fixed point int is negative
 	int string_start = 0;
 	char padding = '0';
 	if (fixed_int < 0) {
@@ -35,23 +36,17 @@ void fixed_to_hex(char (&hex_string)[11], long long int fixed_int) {
 		hex_string[0] = '1';
 	}
 	
+    // Convert fixed point int to hex string
 	char fixed_hex_string[11] = {0};
 	sprintf(fixed_hex_string, "%X", fixed_int);
 	int hex_len = strlen(fixed_hex_string);
 
-	//std::cout << std::endl << "Hex String: " << fixed_hex_string << std::endl
-	//		<< "First Char of Imaginary Hex: " << fixed_hex_string[0] << std::endl
-	//		<< "Imaginary Hex String Length: " << strlen(fixed_hex_string) << std::endl;
-
 	int padding_offset = 10-hex_len;
+    // Fill the hex string with the converted hex form and padding
 	for (int i = string_start; i < 10; i++) {
 		if (10 - i > hex_len)
 			hex_string[i] = padding;
-		else {
+		else 
 			hex_string[i] = fixed_hex_string[i-padding_offset];
-			//std::cout << "HEX: " << fixed_hex_string[i-padding_offset] << " ";
-		}
-
-		//std::cout << "i=" << i<< " ImagHEX: " << hex_string << std::endl;
 	}
 }
