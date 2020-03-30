@@ -10,7 +10,6 @@ DEBUGGER := $(wildcard HexDebugger/*.v)
 
 .SILENT:
 icarus:
-	echo $(MEM)
 	iverilog -g2001 -o Pipe.out \
 			$(TESTBENCH_DIR)/FFT_Pipeline_tb.v \
 			$(MOD_LIB) \
