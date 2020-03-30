@@ -174,7 +174,7 @@ assign LEDR[1] = PIPESW;
         .o_wren(w_write_en),
         .o_rdaddr_A(w_readaddr_A),
         .o_rdaddr_B(w_readaddr_B),
-        .o_rdaddr_tw(w_readaddr_twiddle),
+        .o_rdaddr_tw(w_readaddr_twiddle)
     );
 
     /*
