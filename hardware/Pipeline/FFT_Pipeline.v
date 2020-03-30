@@ -101,19 +101,6 @@ wire [ADDR_SIZE-1:0] w_pipeaddr_A, w_pipeaddr_B;
 wire [3:0] w_driver_state;
 wire w_read_en, w_write_en;
 
-/** TODO: DEBUG WIRES **/
-wire [HALF_SIZE-1:0] w_rddataA_real = w_readdata_A[WORD_SIZE-1:HALF_SIZE];
-wire [HALF_SIZE-1:0] w_rddataA_imag = w_readdata_A[HALF_SIZE-1:0];
-
-wire [HALF_SIZE-1:0] w_rddataB_real = w_readdata_B[WORD_SIZE-1:HALF_SIZE];
-wire [HALF_SIZE-1:0] w_rddataB_imag = w_readdata_B[HALF_SIZE-1:0];
-
-wire [HALF_SIZE-1:0] w_wrdataA_real = w_writedata_A[WORD_SIZE-1:HALF_SIZE];
-wire [HALF_SIZE-1:0] w_wrdataA_imag = w_writedata_A[HALF_SIZE-1:0];
-
-wire [HALF_SIZE-1:0] w_wrdataB_real = w_writedata_B[WORD_SIZE-1:HALF_SIZE];
-wire [HALF_SIZE-1:0] w_wrdataB_imag = w_writedata_B[HALF_SIZE-1:0];
-
 //=======================================================
 //  Structural coding
 //=======================================================
@@ -176,6 +163,20 @@ assign LEDR[1] = PIPESW;
         .o_read_data(w_readdata_twiddle)
     );
 
+    read_driver 
+    #(.ADDR_SIZE(ADDR_SIZE),
+      .MAX_STATE(2))
+    DRIVER(
+        .i_CLK(CLK), 
+        .i_RST(RST),
+
+        .o_rden(w_read_en),
+        .o_wren(w_write_en),
+        .o_rdaddr_A(w_readaddr_A),
+        .o_rdaddr_B(w_readaddr_B),
+        .o_rdaddr_tw(w_readaddr_twiddle),
+    );
+
     /*
     ReadDebugger DEBUGGER(
         .i_memval(MEMSW),
@@ -195,21 +196,5 @@ assign LEDR[1] = PIPESW;
         .o_HEX0(HEX0)
     );
     */
-
-    read_driver 
-    #(.ADDR_SIZE(ADDR_SIZE),
-      .MAX_STATE(2))
-    DRIVER(
-        .i_CLK(CLK), 
-        .i_RST(RST),
-
-        .o_rden(w_read_en),
-        .o_wren(w_write_en),
-        .o_rdaddr_A(w_readaddr_A),
-        .o_rdaddr_B(w_readaddr_B),
-        .o_rdaddr_tw(w_readaddr_twiddle),
-        //TODO: Debug signal
-        .o_state_HEX0(w_driver_state)
-    );
 
 endmodule

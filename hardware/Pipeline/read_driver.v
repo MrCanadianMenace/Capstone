@@ -11,8 +11,6 @@ module read_driver
     output reg [ADDR_SIZE-1:0] o_rdaddr_A,
     output reg [ADDR_SIZE-1:0] o_rdaddr_B,
     output reg [TWID_ADDR_SIZE-1:0] o_rdaddr_tw,
-    //TODO: Debug signals
-    output wire [3:0] o_state_HEX0
 );
     // Useful Parameter
     parameter STATE_SIZE = $clog2(MAX_STATE+3);
