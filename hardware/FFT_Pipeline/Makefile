@@ -1,5 +1,4 @@
-ROOT_DIR := $(PWD)/..
-BUTTERFLY_SUM_MOD_DIR := $(ROOT_DIR)/butterfly_sum
+BUTTERFLY_SUM_MOD_DIR := butterfly_sum
 TESTBENCH_DIR := $(PWD)/testbench
 
 MOD_LIB := $(wildcard $(BUTTERFLY_SUM_MOD_DIR)/*.v)

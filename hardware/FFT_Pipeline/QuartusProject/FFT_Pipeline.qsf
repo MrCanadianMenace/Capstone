@@ -575,17 +575,15 @@ set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name ENABLE_SIGNALTAP ON
 set_global_assignment -name USE_SIGNALTAP_FILE Pipeline.stp
-set_global_assignment -name VERILOG_FILE ../../butterfly_sum/double_sign_mult.v
-set_global_assignment -name VERILOG_FILE ../../butterfly_sum/complex_mult.v
-set_global_assignment -name VERILOG_FILE ../../butterfly_sum/butterfly_sum.v
-set_global_assignment -name VERILOG_FILE ../../butterfly_sum/sign_mult.v
-set_global_assignment -name VERILOG_FILE ../FFT_Pipeline.v
-set_global_assignment -name VERILOG_FILE ../simple_addsub.v
-set_global_assignment -name VERILOG_FILE ../reader.v
-set_global_assignment -name VERILOG_FILE ../ReadDebugger.v
+set_global_assignment -name VERILOG_FILE ../Memory/Twiddle_ROM.v
+set_global_assignment -name VERILOG_FILE ../Memory/RAM2B.v
+set_global_assignment -name VERILOG_FILE ../HexDebugger/ReadDebugger.v
+set_global_assignment -name VERILOG_FILE ../HexDebugger/hex_driver.v
+set_global_assignment -name VERILOG_FILE ../butterfly_sum/double_sign_mult.v
+set_global_assignment -name VERILOG_FILE ../butterfly_sum/complex_mult.v
+set_global_assignment -name VERILOG_FILE ../butterfly_sum/butterfly_sum.v
 set_global_assignment -name VERILOG_FILE ../read_driver.v
-set_global_assignment -name VERILOG_FILE ../RAM2B.v
-set_global_assignment -name VERILOG_FILE ../hex_driver.v
+set_global_assignment -name VERILOG_FILE ../FFT_Pipeline.v
 set_global_assignment -name VERILOG_FILE ../fft_pipe.v
 set_global_assignment -name SDC_FILE FFT_Pipeline.SDC
 set_global_assignment -name SIGNALTAP_FILE Pipeline.stp
