@@ -10,7 +10,7 @@ module read_driver
     output reg o_wren,
     output reg [ADDR_SIZE-1:0] o_rdaddr_A,
     output reg [ADDR_SIZE-1:0] o_rdaddr_B,
-    output reg [TWID_ADDR_SIZE-1:0] o_rdaddr_tw,
+    output reg [TWID_ADDR_SIZE-1:0] o_rdaddr_tw
 );
     // Useful Parameter
     parameter STATE_SIZE = $clog2(MAX_STATE+3);
