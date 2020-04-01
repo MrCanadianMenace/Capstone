@@ -1,5 +1,6 @@
 module fft_layer
 #(  parameter FFT_SIZE = 8,
+    parameter MEM_OFFSET = 0,
     parameter LAYER_NUM = 0,
     parameter ADDR_SIZE = 5,
     parameter TWID_ADDR_SIZE = $clog2(127) )
@@ -47,9 +48,9 @@ parameter PART_MID = PART_LEN / 2;
 *   PART_ITR_SIZE: Partition Iterator Size
 *   POS_ITR_SIZE:  Position Iterator Size
 **/
-parameter POS_DONE      = PART_LEN+2;
+parameter POS_DONE      = PART_MID+1;
 parameter PART_ITR_SIZE = $clog2(NUM_PARTS);
-parameter POS_ITR_SIZE  = $clog2(POS_DONE);
+parameter POS_ITR_SIZE  = $clog2(POS_DONE+1);
 
 // TODO: Debug print important information
 initial begin
@@ -59,13 +60,17 @@ initial begin
 end
 
 /** FFT Layer Iterators **/
-reg [PART_ITR_SIZE-1:0] POSITION  = 'h0;
-reg [POS_ITR_SIZE-1:0]  PARTITION = 'h0;
+reg [POS_ITR_SIZE-1:0]  POSITION  = 'h0;
+reg [PART_ITR_SIZE-1:0] PARTITION = 'h0;
+
+/** Write delay register **/
+reg r_wrdelay;
 
 /** Variable Read Address Ports **/
-wire DISPLACED_POSITION = POSITION + PARTITION * PART_LEN; //TODO: Maybe replace with cumulative partition displacement
+wire [ADDR_SIZE-1:0] DISPLACED_POSITION = POSITION + PARTITION * PART_LEN + MEM_OFFSET; //TODO: Maybe replace with cumulative partition displacement
 assign o_rdaddr_A = DISPLACED_POSITION;
 assign o_rdaddr_B = DISPLACED_POSITION + PART_MID;
+assign o_rdaddr_tw = 'd0;
 
 always @ (posedge i_CLK, posedge i_RST) begin
 
@@ -74,33 +79,29 @@ always @ (posedge i_CLK, posedge i_RST) begin
         POSITION    <= 'h0;
         PARTITION   <= 'h0;
         o_done      <= 1'b0;
-        o_rden      <= 1'b0;
+        o_rden      <= 1'b1;
         o_wren      <= 1'b0;
+        r_wrdelay   <= 2'h0;
     end
 
     else begin
-        o_rdaddr_tw <= 'd0;
+
+        /** Write Delay Counter
+        *   Small counter that counts 2 clock edges
+        *   then sets memory write enable high so 
+        *   that writing won't begin until data 
+        *   reaches writing stage of fft pipe
+        **/
+        if (r_wrdelay == 1'b1) 
+            o_wren <= 1'b1;
+        else
+            r_wrdelay   <= r_wrdelay + 1; 
 
         // Walk through several memory addresses to read from
         case (POSITION)
-            // Starting position, enable reading
-            'h0: begin
-                o_rden      <= 'b1;
-                POSITION    <= POSITION + 1;
-            end
-
-            // First calculated value has reached writing phase
-            // so let's enable writing so it can be written to
-            // memory
-            'h2: begin
-                o_wren      <= 'h1;
-                POSITION	<= POSITION + 1;
-            end
-
             // Reached the end of current partition.  Increase
             // partition iterator and reset position iterator
-            PART_LEN-1: begin
-
+            PART_MID-1: begin
                 // If we're at the last partition then continue
                 // increasing position to the DONE position so
                 // that remaining values can reach write stage
@@ -111,7 +112,7 @@ always @ (posedge i_CLK, posedge i_RST) begin
                 end 
 
                 // Otherwise, start reading for next partition
-                else
+                else begin
                     POSITION    <= 'h0;
                     PARTITION   <= PARTITION + 1;
                 end

@@ -18,6 +18,16 @@ icarus:
 	vvp Pipe.out 
 	gtkwave FFT_Pipeline_tb.vcd & 
 
+fft_wave:
+	iverilog -g2001 -o FFT_test.out \
+			$(TESTBENCH_DIR)/fft_layer_tb.v \
+			$(MOD_LIB) \
+			$(MEMORY) \
+			$(SRC) 
+	cp -f $(MEM) ./
+	vvp FFT_test.out 
+	gtkwave FFT_test_tb.vcd & 
+
 # Currently Doesn't Work
 scramble_wave:
 	$(MAKE) -C SignalScramble
