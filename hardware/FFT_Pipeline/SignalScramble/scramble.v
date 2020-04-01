@@ -54,8 +54,6 @@ flip_A
 assign o_wraddr_A = w_wraddr_flip_A + FFT_SIZE;
 assign o_wraddr_B = w_wraddr_flip_B + FFT_SIZE;
 
-// TODO: Debug print important information
-initial $display("FFTsize=%d, StateSize=%d, MaxState=%d", FFT_SIZE, STATE_SIZE, MAX_STATE);
 
 always @ (posedge i_CLK, posedge i_RST) begin
 

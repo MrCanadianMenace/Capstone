@@ -18,12 +18,9 @@ icarus:
 	vvp Pipe.out 
 	gtkwave FFT_Pipeline_tb.vcd & 
 
+# Currently Doesn't Work
 scramble_wave:
-	iverilog -g2001 -o Scramble.out \
-			SignalScramble/bit_flip_tb.v \
-			SignalScramble/bit_flip.v
-	vvp Scramble.out 
-	gtkwave bit_flip_test.vcd & 
+	$(MAKE) -C SignalScramble
 
 .PHONY: clean
 clean:

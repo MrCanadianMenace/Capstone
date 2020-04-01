@@ -5,13 +5,6 @@ MEMORY := $(wildcard $(PWD)/Memory/*.v)
 MEM_FILE := $(PWD)/Memory/test.mem
 
 .SILENT:
-flip_wave:
-	iverilog -g2001 -o flip.out \
-			$(TESTBENCH_DIR)/bit_flip_tb.v \
-			$(PWD)/bit_flip.v
-	vvp flip.out
-	gtkwave bit_flip_test.vcd & 
-
 scramble_wave:
 	iverilog -g2001 -o scramble.out \
 			$(TESTBENCH_DIR)/scramble_tb.v \
@@ -20,6 +13,13 @@ scramble_wave:
 	cp -f $(MEM_FILE) ./
 	vvp scramble.out
 	gtkwave scramble.vcd & 
+
+flip_wave:
+	iverilog -g2001 -o flip.out \
+			$(TESTBENCH_DIR)/bit_flip_tb.v \
+			$(PWD)/bit_flip.v
+	vvp flip.out
+	gtkwave bit_flip_test.vcd & 
 
 clean:
 	rm -f *.{out,vcd,mem,hex}
