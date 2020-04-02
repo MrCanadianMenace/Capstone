@@ -3,7 +3,7 @@ module fft_layer_tb;
 // Test parameters
 parameter TEST_WORD_SIZE = 74;
 parameter TEST_FFT_SIZE  = 8;
-parameter TEST_LAYER_NUM = 0;
+parameter TEST_LAYER_NUM = 2;
 parameter TEST_MEM_SIZE  = TEST_FFT_SIZE * 2;
 parameter TEST_ADDR_SIZE = $clog2(TEST_MEM_SIZE);
 parameter TEST_TWID_ADDR_SIZE = $clog2(127);
@@ -25,6 +25,7 @@ TEST_FFT_LAYER
 (
     .i_CLK(test_CLK), 
     .i_RST(test_RST),
+    .i_CS(1'b1),
 
     .o_done(w_tst_done),
     .o_rden(w_tst_readen),

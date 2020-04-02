@@ -5,8 +5,9 @@ module fft_layer
     parameter ADDR_SIZE = 5,
     parameter TWID_ADDR_SIZE = $clog2(127) )
 (
-    input wire i_CLK, 
-    input wire i_RST,
+    input i_CLK, 
+    input i_RST,
+    input i_CS,
 
     output reg o_done,
     output reg o_rden,
@@ -36,6 +37,7 @@ parameter LAYER_ORDER = $clog2(FFT_SIZE) - 1 - LAYER_NUM;
 parameter NUM_PARTS = 1 << LAYER_ORDER; // 2 ^ LAYER_ORDER
 parameter PART_LEN = FFT_SIZE / NUM_PARTS;
 parameter PART_MID = PART_LEN / 2;
+parameter TWIDDLE_OFFSET = (LAYER_NUM == 0) ? 0 : (1 << LAYER_NUM) - 1; // 2 ^ (LayerNum - 1) - 1
 
 /** Register Sizing Parameters
 *   Parameters for determining the number of
@@ -54,9 +56,10 @@ parameter POS_ITR_SIZE  = $clog2(POS_DONE+1);
 
 // TODO: Debug print important information
 initial begin
-    $display("FFTsize=%d, LayerOrder=%d, NumberPartitions=%d", FFT_SIZE, LAYER_ORDER, NUM_PARTS);
+    $display("LayerNumber=%d, LayerOrder=%d", LAYER_NUM, LAYER_ORDER);
+    $display("FFTsize=%d, NumberPartitions=%d, TwiddleOffset=%d", FFT_SIZE, NUM_PARTS, TWIDDLE_OFFSET);
     $display("PartitionLength=%d, PartitionMid=%d", PART_LEN, PART_MID);
-    $display("PartItrSize=%d, PositionItrSize=%d", PART_ITR_SIZE, POS_ITR_SIZE);
+    $display("PartItrSize=%d, PositionItrSize=%d\n\n", PART_ITR_SIZE, POS_ITR_SIZE);
 end
 
 /** FFT Layer Iterators **/
@@ -70,12 +73,12 @@ reg r_wrdelay;
 wire [ADDR_SIZE-1:0] DISPLACED_POSITION = POSITION + PARTITION * PART_LEN + MEM_OFFSET; //TODO: Maybe replace with cumulative partition displacement
 assign o_rdaddr_A = DISPLACED_POSITION;
 assign o_rdaddr_B = DISPLACED_POSITION + PART_MID;
-assign o_rdaddr_tw = 'd0;
+assign o_rdaddr_tw = POSITION + TWIDDLE_OFFSET;
 
 always @ (posedge i_CLK, posedge i_RST) begin
 
     // Reset signal received so apply 0 to everything
-    if (i_RST == 1'b1) begin
+    if (i_RST) begin
         POSITION    <= 'h0;
         PARTITION   <= 'h0;
         o_done      <= 1'b0;
@@ -84,7 +87,7 @@ always @ (posedge i_CLK, posedge i_RST) begin
         r_wrdelay   <= 2'h0;
     end
 
-    else begin
+    else if (i_CS) begin
 
         /** Write Delay Counter
         *   Small counter that counts 2 clock edges

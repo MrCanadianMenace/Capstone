@@ -22,6 +22,8 @@ module RAM2B
     /* Block Memory Definition */
     reg [WORD_SIZE-1:0] RAM [MEM_SIZE-1:0];
 
+    integer i;
+
     initial begin
         $display("Loading memory");
         $readmemh("pipe_memory.mem", RAM);
