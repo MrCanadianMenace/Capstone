@@ -1,0 +1,6 @@
+8pt   = 0.560us (28 clock cycles @ 50MHz)
+16pt  = 1.080us (54   cycles)
+32pt  = 2.280us (114  cycles)
+64pt  = 4.900us (245  cycles)
+128pt = 10.72us (536  cycles)
+256pt = 23.58us (1179 cycles)

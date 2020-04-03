@@ -46,4 +46,4 @@ scramble_wave:
 
 .PHONY: clean
 clean:
-	rm -f *.{vcd,out,mem}
+	rm -f *.{vcd,out,mem,hex}

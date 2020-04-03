@@ -1,3 +1,6 @@
+# Ignore tmp folders
+tmp
+
 # Ignore vim swp files
 *.swp
 

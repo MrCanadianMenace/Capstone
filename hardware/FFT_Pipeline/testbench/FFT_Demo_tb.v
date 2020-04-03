@@ -4,7 +4,7 @@ module FFT_Demo_tb;
 parameter TEST_WORD_SIZE = 74;
 parameter TEST_HALF_WORD = TEST_WORD_SIZE / 2;
 parameter TEST_FFT_SIZE  = 8;
-parameter TEST_NUM_LAYERS = 4; // One scramble layer, three FFT layers
+parameter TEST_NUM_LAYERS = $clog2(TEST_FFT_SIZE) + 1; // One scramble layer, three FFT layers
 parameter TEST_MEM_SIZE  = TEST_FFT_SIZE * 2;
 parameter TEST_ADDR_SIZE = $clog2(TEST_MEM_SIZE);
 parameter TEST_TWID_ADDR_SIZE = $clog2(127);
@@ -180,7 +180,7 @@ wire [TEST_HALF_WORD-1 : 0] w_writedata_real_B = w_bus_writedata_B[TEST_WORD_SIZ
 wire [TEST_HALF_WORD-1 : 0] w_writedata_imag_B = w_bus_writedata_B[TEST_HALF_WORD-1:0];
 
 /** Timing Register **/
-reg [9:0] timer;
+reg [10:0] timer;
 
 // Update layer select when the current layer is done
 // Also update timer for measuring execution time
@@ -188,7 +188,7 @@ always @ (posedge test_CLK) begin
     if (w_done[r_layer_sel])
         r_layer_sel <= r_layer_sel + 1;
 
-    if (!w_done[3])
+    if (!w_done[TEST_NUM_LAYERS-1])
         timer <= timer + 1;
 end
 
@@ -209,7 +209,7 @@ initial begin
     test_RST <= 1'b0;
 
 
-    #120 
+    #10000 
     // Write out memory contents to file
     memory_dump = $fopen ("memory_dump.hex","w");
     for (i=0; i < TEST_FFT_SIZE*2; i = i + 1) begin
